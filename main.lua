@@ -1,31 +1,52 @@
 _G.love = require("love")
-require "./game"
+require "./game_objects"
 
 local function checkForBorderCrossing()
-   if circle.x + circle.radius >= board.x + board.width or circle.x - circle.radius <= board.x then
+    if circle.x + circle.radius >= board.x + board.width or circle.x - circle.radius <= board.x then
         circle:changeXDirection()
-    end 
+    end
     if circle.y + circle.radius >= board.y + board.height or circle.y - circle.radius <= board.y then
         circle:changeYDirection()
-    end 
+    end
+
+    _G.sound = love.audio.newSource("sounds/18782.mp3", "static")
 end
 
 
 local function checkForPaddleHit()
-    if circle.x - circle.radius <= leftPaddle.x + leftPaddle.width and
-       circle.x + circle.radius >= leftPaddle.x and
-       circle.y + circle.radius >= leftPaddle.y and
-       circle.y - circle.radius <= leftPaddle.y + leftPaddle.height then
+    if circle.x - circle.radius <= leftPaddle:rightBorder() and
+        circle.x + circle.radius >= leftPaddle:leftBorder() and
+        circle.y + circle.radius >= leftPaddle:topBorder() and
+        circle.y - circle.radius <= leftPaddle:bottomBorder() then
         circle:changeXDirection()
+        sound:play()
+    elseif circle.y - circle.radius <= leftPaddle:bottomBorder() and
+        circle.y + circle.radius >= leftPaddle:topBorder() and
+        circle.x + circle.radius >= leftPaddle:leftBorder() and
+        circle.x - circle.radius <= leftPaddle:rightBorder() then
+        circle:changeYDirection()
+        sound:play()
+    elseif circle.x - circle.radius <= rightPaddle:rightBorder() and
+        circle.x + circle.radius >= rightPaddle:leftBorder() and
+        circle.y + circle.radius >= rightPaddle:topBorder() and
+        circle.y - circle.radius <= rightPaddle:bottomBorder() then
+        circle:changeXDirection()
+        sound:play()
+    elseif circle.y - circle.radius <= rightPaddle:bottomBorder() and
+        circle.y + circle.radius >= rightPaddle:topBorder() and
+        circle.x + circle.radius >= rightPaddle:leftBorder() and
+        circle.x - circle.radius <= rightPaddle:rightBorder() then
+        circle:changeYDirection()
+        sound:play()
     end
-
-    if circle.x + circle.radius >= rightPaddle.x and
-       circle.x - circle.radius <= rightPaddle.x + rightPaddle.width and
-       circle.y + circle.radius >= rightPaddle.y and
-       circle.y - circle.radius <= rightPaddle.y + rightPaddle.height then
-        circle:changeXDirection()
-    end 
 end
+
+
+-- local function checkForPaddleHit()
+
+
+
+-- end
 
 
 local function checkForPaddleMove()
@@ -61,7 +82,6 @@ function love.update(dt)
     checkForPaddleHit()
 
     checkForPaddleMove()
-
 end
 
 function love.draw()
@@ -72,6 +92,3 @@ function love.draw()
     love.graphics.print("ball x pos: " .. circle.x)
     love.graphics.print("\nball y pos: " .. circle.y)
 end
-
-
-

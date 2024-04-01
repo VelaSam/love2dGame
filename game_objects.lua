@@ -6,7 +6,19 @@ end
 
 function Paddle(x, y, color)
     return {
-        x = x or 125, y = y or 250, width = 10, height = 100, color = color or "white"
+        x = x or 125, y = y or 250, width = 10, height = 100, color = color or "white",
+        topBorder = function(self)
+            return self.y
+        end,
+        bottomBorder = function(self)
+            return self.y + self.height
+        end,
+        rightBorder = function(self)
+            return self.x + self.width
+        end,
+        leftBorder = function(self)
+            return self.x
+        end
     }
 end
 
@@ -23,5 +35,18 @@ function Circle()
         changeXDirection = function(self)
             self.vx = (self.vx == 1) and -1 or 1
         end,
+        isTouchingTop = function(self, border)
+            return self.y >= border
+        end,
+        isTouchingBottom = function(self, border)
+            return self.y <= border
+        end,
+        isTouchingRight = function(self,border)
+            return self.x <= border
+        end,
+        isTouchingLeft = function(self,border)
+            return self.x >= border
+        end
+
     }
 end
