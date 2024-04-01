@@ -1,58 +1,40 @@
 _G.love = require("love")
+require "./game"
 
+local function checkForBorderCrossing()
+   if circle.x + circle.radius >= board.x + board.width or circle.x - circle.radius <= board.x then
+        circle:changeXDirection()
+    end 
+    if circle.y + circle.radius >= board.y + board.height or circle.y - circle.radius <= board.y then
+        circle:changeYDirection()
+    end 
+end
+---------------LOVE FRAMEWORK METHODS-------------------------
 function love.load()
-    _G.number = 0
-
-    _G.rectangleX = 50
-    _G.rectangleY = 50
-
-    _G.width = 700
-    _G.height = 500
-
-
-    WhiteSquareX = 100
-    WhiteSquareY = 100
-
-    WhiteSquareWidth = 20
-    WhiteSquareHeight = 100
-
-    goingUp = true
-    goingRight = true
-
-    Xvelocity = 0
-    Yvelocity = 1
+    _G.board = Board()
+    _G.leftPaddle = Paddle()
+    _G.rightPaddle = Paddle(200, 50)
+    _G.circle = Circle()
 end
 
 function love.update(dt)
-    _G.number = number+1
+    circle.x = circle.x + circle.vx
+    circle.y = circle.y + circle.vy
 
-    if(goingRight) then
-        WhiteSquareX = WhiteSquareX + Xvelocity
-        if WhiteSquareX + WhiteSquareWidth == rectangleX + _G.width then
-            goingRight = false
-        end
-     else 
-        WhiteSquareX =  WhiteSquareX - Xvelocity
-        if WhiteSquareX == rectangleX then
-            goingRight = true
-        end
-     end
+    checkForBorderCrossing()
+ 
 
-    if(goingUp) then
-        WhiteSquareY = WhiteSquareY + Yvelocity
-        if WhiteSquareY + WhiteSquareHeight == rectangleY + _G.height then
-            goingUp = false
-        end
-     else 
-        WhiteSquareY =  WhiteSquareY - Yvelocity
-        if WhiteSquareY == rectangleY then
-            goingUp = true
-        end
-     end
+
 end
 
 function love.draw()
-    love.graphics.print("Hello world: " .. _G.number)
-    love.graphics.rectangle("line", rectangleX, rectangleY, _G.width, _G.height)
-    love.graphics.rectangle("fill", WhiteSquareX, WhiteSquareY, WhiteSquareWidth, WhiteSquareHeight)
+    love.graphics.rectangle("line", board.x, board.y, board.width, board.height)
+    love.graphics.rectangle("fill", leftPaddle.x, leftPaddle.y, leftPaddle.width, leftPaddle.height)
+    love.graphics.rectangle("fill", rightPaddle.x, rightPaddle.y, rightPaddle.width, rightPaddle.height)
+    love.graphics.circle("fill", circle.x, circle.y, circle.radius)
+    love.graphics.print("ball x pos: " .. circle.x)
+    love.graphics.print("\nball y pos: " .. circle.y)
 end
+
+
+
