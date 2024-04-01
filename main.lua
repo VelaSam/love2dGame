@@ -9,11 +9,47 @@ local function checkForBorderCrossing()
         circle:changeYDirection()
     end 
 end
+
+
+local function checkForPaddleHit()
+    if circle.x - circle.radius <= leftPaddle.x + leftPaddle.width and
+       circle.x + circle.radius >= leftPaddle.x and
+       circle.y + circle.radius >= leftPaddle.y and
+       circle.y - circle.radius <= leftPaddle.y + leftPaddle.height then
+        circle:changeXDirection()
+    end
+
+    if circle.x + circle.radius >= rightPaddle.x and
+       circle.x - circle.radius <= rightPaddle.x + rightPaddle.width and
+       circle.y + circle.radius >= rightPaddle.y and
+       circle.y - circle.radius <= rightPaddle.y + rightPaddle.height then
+        circle:changeXDirection()
+    end 
+end
+
+
+local function checkForPaddleMove()
+    if love.keyboard.isDown("w") then
+        leftPaddle.y = leftPaddle.y - 1
+    end
+    if love.keyboard.isDown("s") then
+        leftPaddle.y = leftPaddle.y + 1
+    end
+    if love.keyboard.isDown("u") then
+        rightPaddle.y = rightPaddle.y - 1
+    end
+
+    if love.keyboard.isDown("j") then
+        rightPaddle.y = rightPaddle.y + 1
+    end
+end
+
 ---------------LOVE FRAMEWORK METHODS-------------------------
+
 function love.load()
     _G.board = Board()
     _G.leftPaddle = Paddle()
-    _G.rightPaddle = Paddle(200, 50)
+    _G.rightPaddle = Paddle(700 - 125 + 50, 250)
     _G.circle = Circle()
 end
 
@@ -22,8 +58,9 @@ function love.update(dt)
     circle.y = circle.y + circle.vy
 
     checkForBorderCrossing()
- 
+    checkForPaddleHit()
 
+    checkForPaddleMove()
 
 end
 

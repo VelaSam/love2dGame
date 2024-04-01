@@ -6,7 +6,7 @@ end
 
 function Paddle(x, y, color)
     return {
-        x = x or 75, y = y or 50, width = 20, height = 100, color = color or "white"
+        x = x or 125, y = y or 250, width = 10, height = 100, color = color or "white"
     }
 end
 
